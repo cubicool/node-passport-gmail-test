@@ -14,9 +14,9 @@ const app = express();
 const session = require("express-session");
 
 app.use(session({
-	resave: false,
-	saveUninitialized: true,
-	secret: "SECRET"
+   resave: false,
+   saveUninitialized: true,
+   secret: "SECRET"
 }));
 
 app.get("/", function(req, res) { res.render("pages/auth.ejs"); });
@@ -47,31 +47,31 @@ const GOOGLE_CLIENT_ID = "";
 const GOOGLE_CLIENT_SECRET = "";
 
 passport.use(new GoogleStrategy({
-	clientID: GOOGLE_CLIENT_ID,
-	clientSecret: GOOGLE_CLIENT_SECRET,
-	callbackURL: "http://localhost:3000/auth/google/callback"
+   clientID: GOOGLE_CLIENT_ID,
+   clientSecret: GOOGLE_CLIENT_SECRET,
+   callbackURL: "http://localhost:3000/auth/google/callback"
 },
 function(accessToken, refreshToken, profile, done) {
-	// TODO: HOW DO I USE THIS to do interesting things!? Grr.
-	console.log(`accessToken = ${accessToken}`)
-	console.log(`refreshToken = ${refreshToken}`)
+   // TODO: HOW DO I USE THIS to do interesting things!? Grr.
+   console.log(`accessToken = ${accessToken}`)
+   console.log(`refreshToken = ${refreshToken}`)
 
-	userProfile = profile;
+   userProfile = profile;
 
-	return done(null, userProfile);
+   return done(null, userProfile);
 }));
 
 app.get("/auth/google", passport.authenticate("google", {
-	scope: ["profile", "email"],
-	// accessType: "offline"
+   scope: ["profile", "email"],
+   // accessType: "offline"
 }));
 
 app.get("/auth/google/callback",
-	passport.authenticate("google", {failureRedirect: "/error"}),
-	function(req, res) {
-		// Successful OAuth2 dance! Send the user to the route above.
-		res.redirect("/success");
-	}
+   passport.authenticate("google", {failureRedirect: "/error"}),
+   function(req, res) {
+      // Successful OAuth2 dance! Send the user to the route above.
+      res.redirect("/success");
+   }
 );
 ```
 # Questions
@@ -88,28 +88,28 @@ outbox)? A naive approach that I tried was something like this:
 
 ```JavaScript
 const generateConfig = (url, accessToken) => {
-	return {
-		method: "get",
-		url: url,
-		headers: {
-			Authorization: `Bearer ${accessToken} `,
-			"Content-type": "application/json",
-		}
-	};
+   return {
+      method: "get",
+      url: url,
+      headers: {
+         Authorization: `Bearer ${accessToken} `,
+         "Content-type": "application/json",
+      }
+   };
 }
 
 async function getDrafts(accessToken) {
-	try {
-		const url = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
-		const config = generateConfig(url, accessToken);
-		const response = await axios(config);
+   try {
+      const url = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
+      const config = generateConfig(url, accessToken);
+      const response = await axios(config);
 
-		console.log(response.data);
-	}
+      console.log(response.data);
+   }
 
-	catch(error) {
-		console.log(error);
-	}
+   catch(error) {
+      console.log(error);
+   }
 }
 ```
 

@@ -6,7 +6,7 @@ future offline API calls on behalf of that user.
 
 # Code
 
-```
+```JavaScript
 // EXPRESS ----------------------------------------------------------------------------------------
 
 const express = require("express");
@@ -86,7 +86,7 @@ What I'm not clear on is how I **USE** the "results" of that authorization in
 subsequent API calls (for example, listing all the outgoing draft in my GMail
 outbox)? A naive approach that I tried was something like this:
 
-```
+```JavaScript
 const generateConfig = (url, accessToken) => {
 	return {
 		method: "get",

@@ -1,17 +1,9 @@
-# node-passport-gmail-test
-
-Here I am attempting to demonstration not only using OAuth2 to validate a user,
-but to also USE THAT VALIDATION (access/refresh tokens) to make subsequent,
-future offline API calls on behalf of that user.
-
-# Code
-
-```
 // EXPRESS ----------------------------------------------------------------------------------------
 
 const express = require("express");
 const app = express();
 const session = require("express-session");
+// const axios = require("axios");
 
 app.use(session({
 	resave: false,
@@ -73,47 +65,3 @@ app.get("/auth/google/callback",
 		res.redirect("/success");
 	}
 );
-```
-# Questions
-
-The code above works as it should: IF the application is properly created
-and configured with the Google Deveopers Console then they can successfully
-authorize (in my case the project is configured as a "web" app, and NOT a
-"desktop" app). Eventually, the callback inside the ```GoogleStrategy``` is
-invoked, giving me access to to the tokens and the user's profile. *HOWEVER*...
-
-What I'm not clear on is how I **USE** the "results" of that authorization in
-subsequent API calls (for example, listing all the outgoing draft in my GMail
-outbox)? A naive approach that I tried was something like this:
-
-```
-const generateConfig = (url, accessToken) => {
-	return {
-		method: "get",
-		url: url,
-		headers: {
-			Authorization: `Bearer ${accessToken} `,
-			"Content-type": "application/json",
-		}
-	};
-}
-
-async function getDrafts(accessToken) {
-	try {
-		const url = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
-		const config = generateConfig(url, accessToken);
-		const response = await axios(config);
-
-		console.log(response.data);
-	}
-
-	catch(error) {
-		console.log(error);
-	}
-}
-```
-
-I would then use the ```accessToken``` given to me in the ```GoogleStrategy```
-callback and pass it to ```getDrafts```. I get different variations of 401/403
-errors when trying this, so I suspect I'm fundamentally misunderstanding
-something. :(
